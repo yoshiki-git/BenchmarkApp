@@ -13,9 +13,6 @@ import java.nio.charset.StandardCharsets
 class GetLogData(val context: Context) {
     val TAG="TestApp"
 
-    fun writeLogData(){
-
-    }
 
     fun getFileStatus(fileName:String):File{
         val dir_myApp=File("/sdcard/端末負荷アプリ")
