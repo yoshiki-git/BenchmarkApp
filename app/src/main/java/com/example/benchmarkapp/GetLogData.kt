@@ -8,6 +8,7 @@ import java.io.BufferedWriter
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStreamWriter
+import java.lang.StringBuilder
 import java.nio.charset.StandardCharsets
 
 class GetLogData(val context: Context) {
@@ -23,6 +24,17 @@ class GetLogData(val context: Context) {
             Log.d(TAG,"Made App's dir")
         }
         return File(dir_myApp,fileName)
+    }
+
+
+    fun getColumn(filepath: File, columns:Array<String>){
+        val sb =StringBuilder()
+        sb.append("Time")
+        for (value in columns){
+            sb.append(",").append(value)
+        }
+        sb.append("\n")
+        getLog(filepath,sb.toString())
     }
 
     fun getLog(filepath: File, log_data: String) {
