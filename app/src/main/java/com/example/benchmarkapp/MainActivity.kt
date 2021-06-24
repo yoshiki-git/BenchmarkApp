@@ -1,12 +1,16 @@
 package com.example.benchmarkapp
 
+import android.annotation.TargetApi
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.provider.Settings
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -29,6 +33,30 @@ class MainActivity : AppCompatActivity() {
         //permissionチェック
         checkPermission(permissions, REQUEST_CODE)
 
+        //Android11以降のpermissionチェック
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            checkLogPermission()
+        }
+
+        //モニタースタート
+        val serviceButton:Button=findViewById(R.id.monitor_start)
+        serviceButton.setOnClickListener {
+            val intent = Intent(this,MyService::class.java)
+            startForegroundService(intent)
+        }
+
+        //モニターストップ
+        val stopButton:Button=findViewById(R.id.monitor_stop)
+        stopButton.setOnClickListener {
+            val intent = Intent(this,MyService::class.java)
+            stopService(intent)
+        }
+
+
+    }
+
+
+    fun calcCpuUsage(){
         val getCpuInfo=GetCpuInfo()
         val count=getCpuInfo.countCoreNum()
         val minFreqs=getCpuInfo.takeMinCpuFreqs(count + 1)
@@ -48,8 +76,6 @@ class MainActivity : AppCompatActivity() {
                 })
             }
         }, 1, 1000) //1ミリ秒後にintervalミリ秒ごとの繰り返し
-
-
     }
 
 
@@ -57,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
 
     //Permissionチェックのメソッド
-    fun checkPermission(permissions: Array<String>?, request_code: Int) {
+    private fun checkPermission(permissions: Array<String>?, request_code: Int) {
         // 許可されていないものだけダイアログが表示される
         ActivityCompat.requestPermissions(this, permissions!!, request_code)
     }
@@ -88,6 +114,20 @@ class MainActivity : AppCompatActivity() {
             }
             else -> {
             }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.R)
+    private fun checkLogPermission(){
+        if (Environment.isExternalStorageManager()){
+            //todo when permission is granted
+            Log.d(TAG,"MANAGE_EXTERNAL_STORAGE is Granted")
+        }else{
+            //request for the permission
+            val logIntent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+            val uri = Uri.fromParts("package",packageName,null)
+            logIntent.setData(uri)
+            startActivity(logIntent)
         }
     }
 
