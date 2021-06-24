@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
     //Permissionチェックのメソッド
     private fun checkPermission(permissions: Array<String>?, request_code: Int) {
         // 許可されていないものだけダイアログが表示される
