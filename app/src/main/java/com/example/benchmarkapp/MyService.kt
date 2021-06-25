@@ -19,8 +19,7 @@ class MyService : Service() {
 
     private lateinit var context: Context
     private lateinit var getLogData: GetLogData
-    private var totalmemory:Float?=null
-    private lateinit var am:ActivityManager
+    private lateinit var getRamInfo: GetRamInfo
     private lateinit var file: File
 
     private val getTimeData=GetTimeData()
@@ -32,19 +31,13 @@ class MyService : Service() {
         context=applicationContext
         //getLogData生成
         getLogData= GetLogData(context)
+        getRamInfo = GetRamInfo(context)
         //ファイル名を現在時刻に設定する
         val start_time=getTimeData.getFileName()
         //拡張子をつける
         val fileName=start_time+"_Log"+".txt"
         file=getLogData.getFileStatus(fileName)
 
-        //ActivityManager取得
-        am=getSystemService(ACTIVITY_SERVICE)as ActivityManager
-        //メモリの最大値を取得している
-        val meminfo=ActivityManager.MemoryInfo()
-        am.getMemoryInfo(meminfo)
-        totalmemory=meminfo.totalMem.toFloat()/1024/1024
-        Log.d(TAG,"TotalMemory: $totalmemory"+"MB")
 
         val columns= arrayOf("CPU","RAM","ROM","fps")
         getLogData.getColumn(file,columns)
@@ -92,7 +85,9 @@ class MyService : Service() {
              startForeground(9999, notification)
 
               getRomUsage()
-              getMemUsage()
+              getRamInfo.update_property()
+              Log.d(TAG,"テストだよ:${getRamInfo.ramUsage}%")
+
 
            //return START_NOT_STICKY;
            //return START_STICKY;
@@ -100,15 +95,7 @@ class MyService : Service() {
     }
 
 
-        private fun getMemUsage():Float{
-           val mi=ActivityManager.MemoryInfo()
-           am.getMemoryInfo(mi)
-            val availmem=mi.availMem.toFloat()/1024/1024
-            Log.d(TAG,"AvailMem: $availmem"+"MB")
-            val memUsage:Float=(1-(availmem/ totalmemory!!))*100
 
-            return memUsage
-         }
 
         @SuppressLint("DiscouragedPrivateApi")
         private fun getRomUsage(){
