@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">端末負荷測定アプリ</string>
-    <string name="btn_start">スタート</string>
-    <string name="btn_stop">ストップ</string>
+    <string name="btn_start">ログスタート</string>
+    <string name="btn_stop">ログストップ</string>
+    <string name="tv_cpuUsage">CPUステータス</string>
+    <string name="tv_core">N/A</string>
 
 </resources>

@@ -11,10 +11,12 @@ import android.os.Handler
 import android.provider.Settings
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,11 +26,14 @@ class MainActivity : AppCompatActivity() {
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
+    private val getCpuInfo=GetCpuInfo()
+    private var core_count:Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         //permissionチェック
         checkPermission(permissions, REQUEST_CODE)
@@ -53,11 +58,51 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        //テキストビューの設定　コア数の取得
+        val tv_cores: List<TextView> = listOf(
+            findViewById(R.id.tv_corenum1),
+            findViewById(R.id.tv_corenum2),
+            findViewById(R.id.tv_corenum3),
+            findViewById(R.id.tv_corenum4),
+            findViewById(R.id.tv_corenum5),
+            findViewById(R.id.tv_corenum6),
+            findViewById(R.id.tv_corenum7),
+            findViewById(R.id.tv_corenum8),
+            )
+
+        calcCpuUsage()
+
+        core_count = getCpuInfo.countCoreNum()
+
+        //取得したコアをテキストビューに反映する
+        for (i in 0..core_count){
+            tv_cores[i].setText("Core: ${i+1}")
+        }
+
+        //テキストビューの設定　周波数の最大最小を取得
+        val tv_freqs:List<TextView> = listOf(
+            findViewById(R.id.tv_freqScale1),
+            findViewById(R.id.tv_freqScale2),
+            findViewById(R.id.tv_freqScale3),
+            findViewById(R.id.tv_freqScale4),
+            findViewById(R.id.tv_freqScale5),
+            findViewById(R.id.tv_freqScale6),
+            findViewById(R.id.tv_freqScale7),
+            findViewById(R.id.tv_freqScale8),
+            )
+
+
+
+
+
+
+
+
+
     }
 
 
     fun calcCpuUsage(){
-        val getCpuInfo=GetCpuInfo()
         val count=getCpuInfo.countCoreNum()
         val minFreqs=getCpuInfo.takeMinCpuFreqs(count + 1)
         val maxFreqs=getCpuInfo.takeMaxCpuFreqs(count + 1)
