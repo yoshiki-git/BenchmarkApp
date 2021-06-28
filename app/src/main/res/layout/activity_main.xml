@@ -5,7 +5,7 @@
     android:layout_width="fill_parent">
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="wrap_content"
@@ -51,12 +51,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_freqScale1"
-                android:textColor="@color/white"
-                android:text="@string/tv_core"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/tv_currFreq1"
                 android:textColor="@color/white"
                 android:text="@string/tv_core"/>
@@ -71,12 +65,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_corenum2"
-                android:textColor="@color/white"
-                android:text="@string/tv_core"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_freqScale2"
                 android:textColor="@color/white"
                 android:text="@string/tv_core"/>
             <TextView
@@ -101,12 +89,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_freqScale3"
-                android:textColor="@color/white"
-                android:text="@string/tv_core"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/tv_currFreq3"
                 android:textColor="@color/white"
                 android:text="@string/tv_core"/>
@@ -121,12 +103,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_corenum4"
-                android:textColor="@color/white"
-                android:text="@string/tv_core"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_freqScale4"
                 android:textColor="@color/white"
                 android:text="@string/tv_core"/>
             <TextView
@@ -158,12 +134,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_freqScale5"
-                android:textColor="@color/white"
-                android:text="@string/tv_core"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/tv_currFreq5"
                 android:textColor="@color/white"
                 android:text="@string/tv_core"/>
@@ -178,12 +148,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_corenum6"
-                android:textColor="@color/white"
-                android:text="@string/tv_core"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_freqScale6"
                 android:textColor="@color/white"
                 android:text="@string/tv_core"/>
             <TextView
@@ -208,12 +172,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_freqScale7"
-                android:textColor="@color/white"
-                android:text="@string/tv_core"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/tv_currFreq7"
                 android:textColor="@color/white"
                 android:text="@string/tv_core"/>
@@ -228,12 +186,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_corenum8"
-                android:textColor="@color/white"
-                android:text="@string/tv_core"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_freqScale8"
                 android:textColor="@color/white"
                 android:text="@string/tv_core"/>
             <TextView

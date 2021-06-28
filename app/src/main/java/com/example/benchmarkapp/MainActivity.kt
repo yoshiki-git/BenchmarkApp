@@ -79,18 +79,6 @@ class MainActivity : AppCompatActivity() {
             tv_cores[i].setText("Core: ${i+1}")
         }
 
-        //テキストビューの設定　周波数の最大最小を取得
-        val tv_freqs:List<TextView> = listOf(
-            findViewById(R.id.tv_freqScale1),
-            findViewById(R.id.tv_freqScale2),
-            findViewById(R.id.tv_freqScale3),
-            findViewById(R.id.tv_freqScale4),
-            findViewById(R.id.tv_freqScale5),
-            findViewById(R.id.tv_freqScale6),
-            findViewById(R.id.tv_freqScale7),
-            findViewById(R.id.tv_freqScale8),
-            )
-
 
 
 
