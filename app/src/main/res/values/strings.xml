@@ -4,5 +4,8 @@
     <string name="btn_stop">ログストップ</string>
     <string name="tv_cpuUsage">CPUステータス</string>
     <string name="tv_core">N/A</string>
-
+    <string name="tv_RAM">RAM使用率</string>
+    <string name="tv_maxRAM">合計</string>
+    <string name="tx_availRAM">Free RAM</string>
+    <string name="tv_usedRAM">Used RAM</string>
 </resources>

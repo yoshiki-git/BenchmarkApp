@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private var core_count:Int = 0
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -88,6 +89,7 @@ class MainActivity : AppCompatActivity() {
             tv_cores[i].setText(stringBuilder.toString())
         }
 
+        //現在のCPU周波数の設定
         val tv_currFreqs:List<TextView> = listOf(
             findViewById(R.id.tv_currFreq1),
             findViewById(R.id.tv_currFreq2),
@@ -99,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.tv_currFreq8),
             )
 
-        // 設定した間隔おきにログを取得する
+        // 設定した間隔おきに現在のCPU周波数を取得する
         val mTimer = Timer(true)
         val mHandler=Handler()
         mTimer.schedule(object : TimerTask() {
@@ -120,10 +122,6 @@ class MainActivity : AppCompatActivity() {
                 })
             }
         }, 1, 1000) //1ミリ秒後にintervalミリ秒ごとの繰り返し
-
-
-
-
 
     }
 
