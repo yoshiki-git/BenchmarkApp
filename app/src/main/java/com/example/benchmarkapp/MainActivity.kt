@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     )
     private val getCpuInfo=GetCpuInfo()
     private var core_count:Int = 0
+    private lateinit var getRamInfo: GetRamInfo
 
 
 
@@ -101,12 +102,30 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.tv_currFreq8),
             )
 
-        // 設定した間隔おきに現在のCPU周波数を取得する
+        //RAMの取得処理
+        getRamInfo =GetRamInfo(applicationContext)
+        val tv_total_RAM:TextView=findViewById(R.id.tv_total_RAM)
+        val tv_RAM_Info:TextView=findViewById(R.id.tv_RAM_Info)
+        tv_total_RAM.setText("TOTAL RAM: ${getRamInfo.totalmemory.toInt()}MB")
+
+
+        // 定期取得処理は全部ここに入れる
         val mTimer = Timer(true)
         val mHandler=Handler()
         mTimer.schedule(object : TimerTask() {
             override fun run() {
                 mHandler.post(Runnable {
+                    //現在のRAM使用率を取得
+                    val sbRAM=StringBuilder()
+                    getRamInfo.update_property()
+                    sbRAM.append("Used RAM: ${getRamInfo.usedmem.toInt()}MB")
+                        .append("\n")
+                        .append("Free RAM: ${getRamInfo.availmem.toInt()}MB")
+                        .append("\n")
+                        .append("RAM Usage: ${"%.2f".format(getRamInfo.ramUsage)}%")
+                    tv_RAM_Info.setText(sbRAM.toString())
+
+                    //現在のCPU周波数を取得
                     val currentFreqs=getCpuInfo.takeCurrentCpuFreqs(core_count+1)
                     val cpuUsages=getCpuInfo.getCpuUsages(core_count+1,minFreqs,maxFreqs,currentFreqs)
                     Log.d(TAG,"CpuUsages:"+cpuUsages.contentToString())
@@ -122,6 +141,9 @@ class MainActivity : AppCompatActivity() {
                 })
             }
         }, 1, 1000) //1ミリ秒後にintervalミリ秒ごとの繰り返し
+
+
+
 
     }
 

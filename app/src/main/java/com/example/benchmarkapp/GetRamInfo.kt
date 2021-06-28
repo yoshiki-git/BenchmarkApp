@@ -30,7 +30,7 @@ class GetRamInfo(private val context: Context) {
         am.getMemoryInfo(mi)
         availmem=mi.availMem.toFloat()/1024/1024
         usedmem=totalmemory - availmem
-        ramUsage=usedmem/totalmemory
+        ramUsage=usedmem/totalmemory*100
         Log.d(TAG,"TotalMemory: $totalmemory"+"MB")
         Log.d(TAG,"AvailMem: $availmem"+"MB")
         Log.d(TAG,"UsedMem: $usedmem"+"MB")
