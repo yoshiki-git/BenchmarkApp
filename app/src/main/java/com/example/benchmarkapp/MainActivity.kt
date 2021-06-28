@@ -20,6 +20,7 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
+    //MasterBranch Now
     private val REQUEST_CODE : Int = 1000
     private val TAG ="TestApp"
     private val permissions = arrayOf(
@@ -78,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         for (i in 0..core_count){
             tv_cores[i].setText("Core: ${i+1}")
         }
+
 
 
 
