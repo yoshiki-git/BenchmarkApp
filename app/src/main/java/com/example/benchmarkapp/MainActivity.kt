@@ -88,10 +88,38 @@ class MainActivity : AppCompatActivity() {
             tv_cores[i].setText(stringBuilder.toString())
         }
 
+        val tv_currFreqs:List<TextView> = listOf(
+            findViewById(R.id.tv_currFreq1),
+            findViewById(R.id.tv_currFreq2),
+            findViewById(R.id.tv_currFreq3),
+            findViewById(R.id.tv_currFreq4),
+            findViewById(R.id.tv_currFreq5),
+            findViewById(R.id.tv_currFreq6),
+            findViewById(R.id.tv_currFreq7),
+            findViewById(R.id.tv_currFreq8),
+            )
+
+        // 設定した間隔おきにログを取得する
+        val mTimer = Timer(true)
+        val mHandler=Handler()
+        mTimer.schedule(object : TimerTask() {
+            override fun run() {
+                mHandler.post(Runnable {
+                    val currentFreqs=getCpuInfo.takeCurrentCpuFreqs(core_count+1)
+                    val cpuUsages=getCpuInfo.getCpuUsages(core_count+1,minFreqs,maxFreqs,currentFreqs)
+                    Log.d(TAG,"CpuUsages:"+cpuUsages.contentToString())
+                    for (i in 0..core_count){
+                        val stringBuilder2=StringBuilder()
+                        stringBuilder2.append("Now: ${currentFreqs[i]/1000}MHz")
+                            .append("\n")
+                            .append("Usage: ${"%.1f".format(cpuUsages[i])}%")
+                        tv_currFreqs[i].setText(stringBuilder2.toString())
+                    }
 
 
-
-
+                })
+            }
+        }, 1, 1000) //1ミリ秒後にintervalミリ秒ごとの繰り返し
 
 
 
