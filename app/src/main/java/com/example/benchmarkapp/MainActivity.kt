@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import java.lang.StringBuilder
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -71,13 +72,20 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.tv_corenum8),
             )
 
-        calcCpuUsage()
-
         core_count = getCpuInfo.countCoreNum()
+
+        val minFreqs = getCpuInfo.takeMinCpuFreqs(core_count+1)
+        val maxFreqs = getCpuInfo.takeMaxCpuFreqs(core_count+1)
 
         //取得したコアをテキストビューに反映する
         for (i in 0..core_count){
-            tv_cores[i].setText("Core: ${i+1}")
+            val stringBuilder =StringBuilder()
+            stringBuilder.append("Core: ${i+1}")
+                .append("\n")
+                .append("Min: ${minFreqs[i]/1000}MHz")
+                .append("\n")
+                .append("Max :${maxFreqs[i]/1000}MHz")
+            tv_cores[i].setText(stringBuilder.toString())
         }
 
 
