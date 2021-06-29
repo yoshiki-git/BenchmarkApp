@@ -27,7 +27,7 @@ class GetLogData(val context: Context) {
     }
 
 
-    fun getColumn(filepath: File, columns:Array<String>){
+    fun getColumn(filepath: File, columns:List<String>){
         val sb =StringBuilder()
         sb.append("Time")
         for (value in columns){
