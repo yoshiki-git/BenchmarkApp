@@ -249,6 +249,7 @@
         android:background="@color/teal"
         android:layout_marginTop="10sp"
         android:layout_marginStart="10sp"
+        android:id="@+id/tv_RomInfo"
         android:textColor="@color/white"
         android:text="@string/tv_core"/>
 

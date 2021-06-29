@@ -32,7 +32,8 @@ class MainActivity : AppCompatActivity() {
     private var core_count:Int = 0
     private lateinit var getRamInfo: GetRamInfo
 
-
+    //ROMの取得
+    private lateinit var tv_ROM_Info:TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +109,11 @@ class MainActivity : AppCompatActivity() {
         val tv_RAM_Info:TextView=findViewById(R.id.tv_RAM_Info)
         tv_total_RAM.setText("TOTAL RAM: ${getRamInfo.totalmemory.toInt()}MB")
 
+        //ROMの取得
+        tv_ROM_Info =findViewById(R.id.tv_RomInfo)
+        getRomUsage()
+
+
 
         // 定期取得処理は全部ここに入れる
         val mTimer = Timer(true)
@@ -171,6 +177,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("DiscouragedPrivateApi")
     private fun getRomUsage(){
+        val sb = java.lang.StringBuilder()
 
         val storageManager = getSystemService(StorageManager::class.java)
 
@@ -186,6 +193,10 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, " Used space: ${String.format(Locale.US, "%,12d", usedSpase1)}MB")
         Log.d(TAG, " Free space: ${String.format(Locale.US, "%,12d", freeSpase1)}MB")
         Log.d(TAG, "Total space: ${String.format(Locale.US, "%,12d", totalSpase1)}MB")
+
+        sb.append("システムストレージ  path: /system")
+            .append("\n")
+            .append("Used Space : $usedSpase1 MB  Total Space : $totalSpase1 MB " )
 
 
         for (storageVolume: StorageVolume in storageManager.storageVolumes) {
@@ -227,7 +238,15 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, " Used space: ${String.format(Locale.US, "%,12d", usedSpase)}MB")
             Log.d(TAG, " Free space: ${String.format(Locale.US, "%,12d", freeSpase)}MB")
             Log.d(TAG, "Total space: ${String.format(Locale.US, "%,12d", totalSpase)}MB")
+
+            sb.append("\n")
+                .append("$label  path: $path")
+                .append("\n")
+                .append("Used Space : $usedSpase MB  Total Space : $totalSpase MB " )
+
         }
+
+        tv_ROM_Info.setText(sb.toString())
 
     }
 
