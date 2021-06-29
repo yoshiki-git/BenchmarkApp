@@ -22,6 +22,7 @@ import kotlin.collections.ArrayList
 class MainActivity : AppCompatActivity() {
 
     //MasterBranch Now
+    // こっからROM入れると何故かクラッシュする
     private val REQUEST_CODE : Int = 1000
     private val TAG ="TestApp"
     private val permissions = arrayOf(
