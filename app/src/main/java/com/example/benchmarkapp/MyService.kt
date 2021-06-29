@@ -5,12 +5,14 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
 import android.os.StatFs
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.util.Log
 import java.io.File
+import java.lang.StringBuilder
 import java.util.*
 
 class MyService : Service() {
@@ -21,8 +23,10 @@ class MyService : Service() {
     private lateinit var getLogData: GetLogData
     private lateinit var getRamInfo: GetRamInfo
     private lateinit var file: File
-
+    private val getCpuInfo = GetCpuInfo()
     private val getTimeData=GetTimeData()
+    private var core_count:Int = 0
+    private var log_data:String=""
 
 
     override fun onCreate() {
@@ -38,8 +42,18 @@ class MyService : Service() {
         val fileName=start_time+"_Log"+".txt"
         file=getLogData.getFileStatus(fileName)
 
+        //カラムに渡す配列
+        val columns = mutableListOf<String>()
+        //CPUコア数の取得
+        core_count = getCpuInfo.countCoreNum()
+        for (i in 0..core_count){
+            columns.add(i,"Core${i+1}")
+        }
+        //RAMのカラム追加
+        columns.add("RAM")
 
-        val columns= arrayOf("CPU","RAM","ROM","fps")
+  //      val columns= arrayOf("CPU","RAM","ROM","fps")
+        //カラムをログに書き込む
         getLogData.getColumn(file,columns)
 
     }
@@ -84,15 +98,45 @@ class MyService : Service() {
           // startForeground 第一引数のidで通知を識別
              startForeground(9999, notification)
 
-              getRomUsage()
-              getRamInfo.update_property()
+
               Log.d(TAG,"テストだよ:${getRamInfo.ramUsage}%")
+
+            writeLog()
 
 
            //return START_NOT_STICKY;
            //return START_STICKY;
              return START_REDELIVER_INTENT
     }
+        private fun writeLog(){
+            // 定期取得処理は全部ここに入れる
+            val mTimer = Timer(true)
+            val mHandler= Handler()
+            mTimer.schedule(object : TimerTask() {
+                override fun run() {
+                    mHandler.post(Runnable {
+
+                        val stringBuilder=StringBuilder()
+                        stringBuilder.append(getTimeData.getNowTime()).append(",")
+
+                        //現在のCPU周波数を取得
+                        val currentFreqs=getCpuInfo.takeCurrentCpuFreqs(core_count+1)
+                        for (i in 0..core_count){
+                            stringBuilder.append(currentFreqs[i]/1000).append(",")
+                        }
+
+                        //現在のRAM使用率を取得
+                        getRamInfo.update_property()
+                        stringBuilder.append(getRamInfo.usedmem.toInt())
+                        stringBuilder.append("\n")
+
+                        getLogData.getLog(file,stringBuilder.toString())
+
+
+                    })
+                }
+            }, 1, 1000) //1ミリ秒後にintervalミリ秒ごとの繰り返し
+        }
 
 
 

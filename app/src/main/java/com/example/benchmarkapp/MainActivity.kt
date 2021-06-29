@@ -76,20 +76,26 @@ class MainActivity : AppCompatActivity() {
             )
 
         core_count = getCpuInfo.countCoreNum()
-
-        val minFreqs = getCpuInfo.takeMinCpuFreqs(core_count+1)
-        val maxFreqs = getCpuInfo.takeMaxCpuFreqs(core_count+1)
-
-        //取得したコアをテキストビューに反映する
-        for (i in 0..core_count){
-            val stringBuilder =StringBuilder()
-            stringBuilder.append("Core: ${i+1}")
-                .append("\n")
-                .append("Min: ${minFreqs[i]/1000}MHz")
-                .append("\n")
-                .append("Max :${maxFreqs[i]/1000}MHz")
-            tv_cores[i].setText(stringBuilder.toString())
+        if (core_count == -1){
+            Toast.makeText(this,"CPUを読み取ることができません",Toast.LENGTH_SHORT).show()
+            return
         }
+
+            val minFreqs = getCpuInfo.takeMinCpuFreqs(core_count + 1)
+            val maxFreqs = getCpuInfo.takeMaxCpuFreqs(core_count + 1)
+
+            //取得したコアをテキストビューに反映する
+            for (i in 0..core_count) {
+                val stringBuilder = StringBuilder()
+                stringBuilder.append("Core: ${i + 1}")
+                    .append("\n")
+                    .append("Min: ${minFreqs[i] / 1000}MHz")
+                    .append("\n")
+                    .append("Max :${maxFreqs[i] / 1000}MHz")
+                tv_cores[i].setText(stringBuilder.toString())
+            }
+
+
 
         //現在のCPU周波数の設定
         val tv_currFreqs:List<TextView> = listOf(
@@ -154,26 +160,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun calcCpuUsage(){
-        val count=getCpuInfo.countCoreNum()
-        val minFreqs=getCpuInfo.takeMinCpuFreqs(count + 1)
-        val maxFreqs=getCpuInfo.takeMaxCpuFreqs(count + 1)
 
-
-        // 設定した間隔おきにログを取得する
-        val mTimer = Timer(true)
-        val mHandler=Handler()
-        mTimer.schedule(object : TimerTask() {
-            override fun run() {
-                mHandler.post(Runnable {
-                    val currentFreqs=getCpuInfo.takeCurrentCpuFreqs(count+1)
-                    val cpuUsages=getCpuInfo.getCpuUsages(count+1,minFreqs,maxFreqs,currentFreqs)
-                    Log.d(TAG,"CpuUsages:"+cpuUsages.contentToString())
-
-                })
-            }
-        }, 1, 1000) //1ミリ秒後にintervalミリ秒ごとの繰り返し
-    }
 
     @SuppressLint("DiscouragedPrivateApi")
     private fun getRomUsage(){
