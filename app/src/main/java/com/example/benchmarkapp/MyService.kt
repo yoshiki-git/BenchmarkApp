@@ -26,7 +26,6 @@ class MyService : Service() {
     private val getCpuInfo = GetCpuInfo()
     private val getTimeData=GetTimeData()
     private var core_count:Int = 0
-    private var log_data:String=""
 
 
     override fun onCreate() {
