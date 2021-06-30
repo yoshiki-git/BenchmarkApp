@@ -32,6 +32,9 @@ class MyService : Service() {
     private val getTimeData=GetTimeData()
     private var core_count:Int = 0
 
+    private lateinit var mTimer: Timer
+    private lateinit var mHandler: Handler
+
 
 
     override fun onCreate() {
@@ -69,6 +72,8 @@ class MyService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mTimer.cancel()
+        stopSelf()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -119,8 +124,8 @@ class MyService : Service() {
     }
         private fun writeLog(){
             // 定期取得処理は全部ここに入れる
-            val mTimer = Timer(true)
-            val mHandler= Handler()
+            mTimer = Timer(true)
+            mHandler= Handler()
             mTimer.schedule(object : TimerTask() {
                 override fun run() {
                     mHandler.post(Runnable {
