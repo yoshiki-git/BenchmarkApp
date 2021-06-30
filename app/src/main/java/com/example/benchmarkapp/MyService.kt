@@ -41,7 +41,7 @@ class MyService : Service() {
         val fileName=start_time+"_Log"+".txt"
         file=getLogData.getFileStatus(fileName)
 
-        //カラムに渡す配列
+        //カラムに渡す配列の定義
         val columns = mutableListOf<String>()
         //CPUコア数の取得
         core_count = getCpuInfo.countCoreNum()
