@@ -144,23 +144,22 @@ class MainActivity : AppCompatActivity() {
         val windowManager:WindowManager = application.getSystemService(Service.WINDOW_SERVICE) as WindowManager
         val display:Display = windowManager.defaultDisplay
         val size=Point()
+
+        windowManager.defaultDisplay.getRealSize(size)
+
         val sbDisplay = StringBuilder()
+
         sbDisplay.append("Name: ${display.name}")
                  .append("\n")
-            .append("RefreshRate: ${display.refreshRate} fps")
-            .append("\n")
-       if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.R){
-           val metrics = windowManager.currentWindowMetrics
-       }else{
-           windowManager.defaultDisplay.getRealSize(size)
-           sbDisplay.append("Resolution: ${size.x}x${size.y}")
-               .append("\n")
-           val metrics = DisplayMetrics()
-           display.getMetrics(metrics)
-           sbDisplay.append("DPI: ${metrics.densityDpi}")
+                 .append("RefreshRate: ${display.refreshRate} fps") //リフレッシュレート
+                 .append("\n")
+                 .append("Resolution: ${size.x}x${size.y}") //解像度
+                 .append("\n")
 
 
-       }
+        val metrics = DisplayMetrics()
+        display.getMetrics(metrics)
+        sbDisplay.append("DPI: ${metrics.densityDpi}")
 
         tv_display_info.text =sbDisplay.toString()
 

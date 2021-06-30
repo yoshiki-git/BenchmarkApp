@@ -11,6 +11,8 @@ import android.os.StatFs
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.util.Log
+import android.view.Display
+import android.view.WindowManager
 import java.io.File
 import java.lang.StringBuilder
 import java.util.*
@@ -23,9 +25,13 @@ class MyService : Service() {
     private lateinit var getLogData: GetLogData
     private lateinit var getRamInfo: GetRamInfo
     private lateinit var file: File
+
+    private lateinit var windowManager:WindowManager
+
     private val getCpuInfo = GetCpuInfo()
     private val getTimeData=GetTimeData()
     private var core_count:Int = 0
+
 
 
     override fun onCreate() {
@@ -35,6 +41,9 @@ class MyService : Service() {
         //getLogData生成
         getLogData= GetLogData(context)
         getRamInfo = GetRamInfo(context)
+
+        //Windowマネージャー
+        windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
         //ファイル名を現在時刻に設定する
         val start_time=getTimeData.getFileName()
         //拡張子をつける
@@ -50,6 +59,7 @@ class MyService : Service() {
         }
         //RAMのカラム追加
         columns.add("RAM")
+        columns.add("fps")
 
   //      val columns= arrayOf("CPU","RAM","ROM","fps")
         //カラムをログに書き込む
@@ -126,7 +136,12 @@ class MyService : Service() {
 
                         //現在のRAM使用率を取得
                         getRamInfo.update_property()
-                        stringBuilder.append(getRamInfo.usedmem.toInt())
+                        stringBuilder.append(getRamInfo.usedmem.toInt()).append(",")
+
+                        //リフレッシュレート
+                        val rf =getRefresh()
+                        stringBuilder.append(rf)
+
                         stringBuilder.append("\n")
 
                         getLogData.getLog(file,stringBuilder.toString())
@@ -135,6 +150,14 @@ class MyService : Service() {
                     })
                 }
             }, 1, 1000) //1ミリ秒後にintervalミリ秒ごとの繰り返し
+        }
+
+    //リフレッシュレートの取得
+        fun getRefresh():String{
+            val display = windowManager.defaultDisplay
+            val rf = display.refreshRate.toString()
+
+            return rf
         }
 
 
