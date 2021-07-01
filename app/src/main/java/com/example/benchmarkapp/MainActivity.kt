@@ -2,22 +2,30 @@ package com.example.benchmarkapp
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
+import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Point
 import android.net.Uri
 import android.os.*
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.provider.Settings
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Display
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.time.measureTime
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,6 +43,10 @@ class MainActivity : AppCompatActivity() {
     //ROMの取得
     private lateinit var tv_ROM_Info:TextView
 
+    //Display情報の表示
+    private lateinit var tv_display_info:TextView
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -50,16 +62,24 @@ class MainActivity : AppCompatActivity() {
 
         //モニタースタート
         val serviceButton:Button=findViewById(R.id.monitor_start)
-        serviceButton.setOnClickListener {
-            val intent = Intent(this,MyService::class.java)
-            startForegroundService(intent)
-        }
 
         //モニターストップ
         val stopButton:Button=findViewById(R.id.monitor_stop)
+
+        //スタートボタンのリスナ
+        serviceButton.setOnClickListener {
+            val intent = Intent(this,MyService::class.java)
+            startForegroundService(intent)
+            serviceButton.isEnabled = false
+            stopButton.isEnabled = true
+        }
+
+        //ストップボタンのリスナ
         stopButton.setOnClickListener {
             val intent = Intent(this,MyService::class.java)
             stopService(intent)
+            stopButton.isEnabled =false
+            serviceButton.isEnabled = true
         }
 
 
@@ -92,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                     .append("Min: ${minFreqs[i] / 1000}MHz")
                     .append("\n")
                     .append("Max :${maxFreqs[i] / 1000}MHz")
-                tv_cores[i].setText(stringBuilder.toString())
+                tv_cores[i].text = stringBuilder.toString()
             }
 
 
@@ -113,11 +133,36 @@ class MainActivity : AppCompatActivity() {
         getRamInfo =GetRamInfo(applicationContext)
         val tv_total_RAM:TextView=findViewById(R.id.tv_total_RAM)
         val tv_RAM_Info:TextView=findViewById(R.id.tv_RAM_Info)
-        tv_total_RAM.setText("TOTAL RAM: ${getRamInfo.totalmemory.toInt()}MB")
+        tv_total_RAM.text = "TOTAL RAM: ${getRamInfo.totalmemory.toInt()}MB"
 
         //ROMの取得
         tv_ROM_Info =findViewById(R.id.tv_RomInfo)
         getRomUsage()
+
+        //ディスプレイ情報
+        tv_display_info=findViewById(R.id.tv_display_info)
+        val windowManager:WindowManager = application.getSystemService(Service.WINDOW_SERVICE) as WindowManager
+        val display:Display = windowManager.defaultDisplay
+        val size=Point()
+
+        windowManager.defaultDisplay.getRealSize(size)
+
+        val sbDisplay = StringBuilder()
+
+        sbDisplay.append("Name: ${display.name}")
+                 .append("\n")
+                 .append("RefreshRate: ${display.refreshRate} fps") //リフレッシュレート
+                 .append("\n")
+                 .append("Resolution: ${size.x}x${size.y}") //解像度
+                 .append("\n")
+
+
+        val metrics = DisplayMetrics()
+        display.getMetrics(metrics)
+        sbDisplay.append("DPI: ${metrics.densityDpi}")
+
+        tv_display_info.text =sbDisplay.toString()
+
 
 
 
@@ -233,7 +278,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        tv_ROM_Info.setText(sb.toString())
+        tv_ROM_Info.text = sb.toString()
 
     }
 
@@ -286,10 +331,12 @@ class MainActivity : AppCompatActivity() {
             //request for the permission
             val logIntent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
             val uri = Uri.fromParts("package",packageName,null)
-            logIntent.setData(uri)
+            logIntent.data = uri
             startActivity(logIntent)
         }
     }
 
 }
+
+
 

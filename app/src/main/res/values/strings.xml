@@ -8,4 +8,5 @@
     <string name="tv_maxRAM">合計</string>
     <string name="tx_availRAM">Free RAM</string>
     <string name="tv_usedRAM">Used RAM</string>
+    <string name="tv_display">ディスプレイ情報</string>
 </resources>

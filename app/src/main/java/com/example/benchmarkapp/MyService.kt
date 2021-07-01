@@ -11,6 +11,8 @@ import android.os.StatFs
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.util.Log
+import android.view.Display
+import android.view.WindowManager
 import java.io.File
 import java.lang.StringBuilder
 import java.util.*
@@ -23,9 +25,16 @@ class MyService : Service() {
     private lateinit var getLogData: GetLogData
     private lateinit var getRamInfo: GetRamInfo
     private lateinit var file: File
+
+    private lateinit var windowManager:WindowManager
+
     private val getCpuInfo = GetCpuInfo()
     private val getTimeData=GetTimeData()
     private var core_count:Int = 0
+
+    private lateinit var mTimer: Timer
+    private lateinit var mHandler: Handler
+
 
 
     override fun onCreate() {
@@ -35,13 +44,16 @@ class MyService : Service() {
         //getLogData生成
         getLogData= GetLogData(context)
         getRamInfo = GetRamInfo(context)
+
+        //Windowマネージャー
+        windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
         //ファイル名を現在時刻に設定する
         val start_time=getTimeData.getFileName()
         //拡張子をつける
         val fileName=start_time+"_Log"+".txt"
         file=getLogData.getFileStatus(fileName)
 
-        //カラムに渡す配列
+        //カラムに渡す配列の定義
         val columns = mutableListOf<String>()
         //CPUコア数の取得
         core_count = getCpuInfo.countCoreNum()
@@ -50,6 +62,7 @@ class MyService : Service() {
         }
         //RAMのカラム追加
         columns.add("RAM")
+        columns.add("fps")
 
   //      val columns= arrayOf("CPU","RAM","ROM","fps")
         //カラムをログに書き込む
@@ -59,6 +72,8 @@ class MyService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mTimer.cancel()
+        stopSelf()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -109,8 +124,8 @@ class MyService : Service() {
     }
         private fun writeLog(){
             // 定期取得処理は全部ここに入れる
-            val mTimer = Timer(true)
-            val mHandler= Handler()
+            mTimer = Timer(true)
+            mHandler= Handler()
             mTimer.schedule(object : TimerTask() {
                 override fun run() {
                     mHandler.post(Runnable {
@@ -126,7 +141,12 @@ class MyService : Service() {
 
                         //現在のRAM使用率を取得
                         getRamInfo.update_property()
-                        stringBuilder.append(getRamInfo.usedmem.toInt())
+                        stringBuilder.append(getRamInfo.usedmem.toInt()).append(",")
+
+                        //リフレッシュレート
+                        val rf =getRefresh()
+                        stringBuilder.append(rf)
+
                         stringBuilder.append("\n")
 
                         getLogData.getLog(file,stringBuilder.toString())
@@ -135,6 +155,14 @@ class MyService : Service() {
                     })
                 }
             }, 1, 1000) //1ミリ秒後にintervalミリ秒ごとの繰り返し
+        }
+
+    //リフレッシュレートの取得
+        fun getRefresh():String{
+            val display = windowManager.defaultDisplay
+            val rf = display.refreshRate.toString()
+
+            return rf
         }
 
 
