@@ -329,7 +329,7 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG,"MANAGE_EXTERNAL_STORAGE is Granted")
         }else{
             //request for the permission
-            val logIntent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+            val logIntent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
             val uri = Uri.fromParts("package",packageName,null)
             logIntent.data = uri
             startActivity(logIntent)
